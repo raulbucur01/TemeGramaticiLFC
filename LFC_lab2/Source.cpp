@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "Gramatica.h"
+#include "Grammar.h"
 
 int main() {
 	try {

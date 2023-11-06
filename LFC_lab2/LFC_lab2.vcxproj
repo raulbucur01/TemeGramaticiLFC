@@ -127,14 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Gramatica.cpp" />
+    <ClCompile Include="Grammar.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="input.in" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Gramatica.h" />
+    <ClInclude Include="Grammar.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

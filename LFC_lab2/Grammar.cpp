@@ -1,4 +1,4 @@
-﻿#include "Gramatica.h"
+﻿#include "Grammar.h"
 
 void Grammar::ReadGrammar(std::ifstream& input)
 {
