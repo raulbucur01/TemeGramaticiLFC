@@ -1,6 +1,6 @@
 ﻿#include "Gramatica.h"
 
-void Gramatica::CitireElementeGramatica(std::ifstream& input)
+void Grammar::ReadGrammar(std::ifstream& input)
 {
 	int VnSize;
 	input >> VnSize;
@@ -32,12 +32,12 @@ void Gramatica::CitireElementeGramatica(std::ifstream& input)
 		P.push_back(elem);
 	}
 
-	if (!Verificare()) {
+	if (!VerifyGrammar()) {
 		throw std::exception("Datele sunt eronate!");
 	}
 }
 
-bool Gramatica::Verificare()
+bool Grammar::VerifyGrammar()
 {	
 	// (1) VN intersectat cu VT = 0
 	for (int i = 0; i < Vn.size(); i++)
@@ -68,7 +68,58 @@ bool Gramatica::Verificare()
 		if (!contine)
 			return false;
 	}
-		
+	
+	// (4) există cel puțin o producție care are în stânga doar S
+	bool exista = false;
+	for (int i = 0; i < P.size(); i++)
+	{
+		if (P[i].first.length() == 1 && P[i].first[0] == 'S')
+		{
+			exista = true;
+			break;
+		}
+	}
+	if (!exista)
+		return false;
+
+	// (5) fiecare producție conține doar elemente din VN și VT
+	for (int i = 0; i < P.size(); i++)
+	{
+		std::string stanga = P[i].first;
+		for (int j = 0; j < stanga.length(); j++)
+			if (std::find(Vn.begin(), Vn.end(), stanga[j]) == Vn.end() && std::find(Vt.begin(), Vt.end(), stanga[j]) == Vt.end())
+				return false;
+
+		std::string dreapta = P[i].second;
+		for (int j = 0; j < dreapta.length(); j++)
+			if (std::find(Vn.begin(), Vn.end(), dreapta[j]) == Vn.end() && std::find(Vt.begin(), Vt.end(), dreapta[j]) == Vt.end())
+				return false;
+	}
 
 	return true;
+}
+
+void Grammar::PrintGrammar()
+{
+	std::cout << "Vn = { ";
+	for (int i = 0; i < Vn.size(); i++)
+	{
+		std::cout << Vn[i] << " ";
+	}
+	std::cout << "}\n";
+
+	std::cout << "Vt = { ";
+	for (int i = 0; i < Vt.size(); i++)
+	{
+		std::cout << Vt[i] << " ";
+	}
+	std::cout << "}\n";
+
+	std::cout << "S = " << S << "\n";
+
+	std::cout << "P: \n";
+	for (size_t i = 0; i < P.size(); i++)
+	{
+		std::cout << "(" << i + 1 << ") " << P[i].first << " -> " << P[i].second << "\n";
+	}
 }

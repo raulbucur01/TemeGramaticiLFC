@@ -5,8 +5,9 @@
 int main() {
 	try {
 		std::ifstream input("input.in");
-		Gramatica g;
-		g.CitireElementeGramatica(input);
+		Grammar g;
+		g.ReadGrammar(input);
+		g.PrintGrammar();
 	}
 	catch (std::exception e) {
 		std::cout << e.what();

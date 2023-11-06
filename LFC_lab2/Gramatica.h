@@ -5,7 +5,7 @@
 #include <iostream>
 #include <set>
 
-class Gramatica
+class Grammar
 {
 private:
 	std::vector<char> Vn;
@@ -13,7 +13,8 @@ private:
 	char S;
 	std::vector<std::pair<std::string, std::string>> P;
 public:
-	void CitireElementeGramatica(std::ifstream& input);
-	bool Verificare();
+	void ReadGrammar(std::ifstream& input);
+	bool VerifyGrammar();
+	void PrintGrammar();
 };
 
