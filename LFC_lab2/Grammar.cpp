@@ -1,4 +1,5 @@
 ﻿#include "Grammar.h"
+#include <random>
 
 void Grammar::ReadGrammar(std::ifstream& input)
 {
@@ -47,24 +48,23 @@ bool Grammar::VerifyGrammar()
 	}
 
 	// (2) S apartine VN 
-	for (int i = 0; i < Vn.size(); i++)
-	{
-		if (std::find(Vn.begin(), Vn.end(), S) == Vn.end())
-			return false;
-	}
+	if (std::find(Vn.begin(), Vn.end(), S) == Vn.end())
+		return false;
+
 
 	// (3) pentru fiecare regulă, membrul stâng conține cel puțin un neterminal 
 	bool contine = false;
 	for (int i = 0; i < P.size(); i++)
 	{
 		contine = false;
-		for (int j = 0; j < Vn.size(); j++)
+		for (int j = 0; j < P[i].first.length(); j++)
 		{
-			if (P[i].first.find(Vn[j]) < P[i].first.length()) {
+			if (std::find(Vn.begin(), Vn.end(), P[i].first[j]) != Vn.end()) {
 				contine = true;
 				break;
 			}
 		}
+
 		if (!contine)
 			return false;
 	}
@@ -109,7 +109,7 @@ bool Grammar::IsRegular()
 		if (left.length() > 1)
 			return false;
 
-		if (std::find(Vn.begin(), Vn.end(), left) == Vn.end())
+		if (std::find(Vn.begin(), Vn.end(), left[0]) == Vn.end())
 			return false;
 
 		// verificare terminal sau terminal + neterminal in dreapta
@@ -117,7 +117,7 @@ bool Grammar::IsRegular()
 		if (right.length() > 2)
 			return false;
 
-		if (right.length() == 1 && std::find(Vt.begin(), Vt.end(), right) == Vt.end()) // verif daca e terminal
+		if (right.length() == 1 && std::find(Vt.begin(), Vt.end(), right[0]) == Vt.end()) // verif daca e terminal
 			return false;
 
 		if (right.length() == 2
@@ -127,6 +127,53 @@ bool Grammar::IsRegular()
 	}
 
 	return true;
+}
+
+void Grammar::GenerateWord()
+{
+	std::random_device rd;
+	std::mt19937 eng(rd());
+
+	std::vector<std::string> productions;
+	std::string word(1, S);
+	productions.push_back(word);
+
+	while (true) {
+		std::vector<int> applicableProductionIndexes;
+		for (int i = 0; i < P.size(); i++)
+		{
+			if (word.find(P[i].first) != word.length())
+				applicableProductionIndexes.push_back(i);
+		}
+
+		if (applicableProductionIndexes.empty())
+			break;
+
+		std::uniform_int_distribution<>distr(0, applicableProductionIndexes.size() - 1);
+		int randomProductionIndex = distr(eng);
+		int productionToApplyIndex = applicableProductionIndexes[randomProductionIndex];
+
+		std::vector<int> occurencesOfProductionInWord;
+		int pos = 0;
+		while (pos < word.length()) {
+			occurencesOfProductionInWord.push_back(pos);
+			pos = word.find(P[productionToApplyIndex].first, pos + 1);
+		}
+
+		if (!occurencesOfProductionInWord.empty()) {
+			std::uniform_int_distribution<>distr(0, occurencesOfProductionInWord.size() - 1);
+			int randomOccurenceIndex = distr(eng);
+			int occurenceToReplacePos = occurencesOfProductionInWord[randomOccurenceIndex];
+			word.replace(occurenceToReplacePos, P[productionToApplyIndex].first.length(), P[productionToApplyIndex].second);
+
+			productions.push_back(word);
+		}
+	}
+
+	for (auto& prod : productions)
+	{
+		std::cout << prod << " => ";
+	}
 }
 
 void Grammar::PrintGrammar()

@@ -10,9 +10,10 @@ class Grammar
 private:
 	std::vector<char> Vn;
 	std::vector<char> Vt;
-	char S;
+	char S{};
 	std::vector<std::pair<std::string, std::string>> P;
 public:
+	Grammar() = default;
 	bool VerifyGrammar();
 	bool IsRegular();
 	void GenerateWord();
