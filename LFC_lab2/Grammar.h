@@ -13,8 +13,10 @@ private:
 	char S;
 	std::vector<std::pair<std::string, std::string>> P;
 public:
-	void ReadGrammar(std::ifstream& input);
 	bool VerifyGrammar();
+	bool IsRegular();
+	void GenerateWord();
 	void PrintGrammar();
+	void ReadGrammar(std::ifstream& input);
 };
 

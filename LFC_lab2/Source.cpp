@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "Grammar.h"
+#include <string>
 
 int main() {
 	try {
@@ -8,6 +9,7 @@ int main() {
 		Grammar g;
 		g.ReadGrammar(input);
 		g.PrintGrammar();
+		std::cout << g.IsRegular();
 	}
 	catch (std::exception e) {
 		std::cout << e.what();

@@ -4,12 +4,12 @@ void Grammar::ReadGrammar(std::ifstream& input)
 {
 	int VnSize;
 	input >> VnSize;
-	
+
 	for (int i = 0; i < VnSize; i++)
 	{
-		char elem; 
+		char elem;
 		input >> elem;
-		Vn.push_back(elem); 
+		Vn.push_back(elem);
 	}
 
 	int VtSize;
@@ -17,9 +17,9 @@ void Grammar::ReadGrammar(std::ifstream& input)
 
 	for (int i = 0; i < VtSize; i++)
 	{
-		char elem; 
-		input >> elem;  
-		Vt.push_back(elem); 
+		char elem;
+		input >> elem;
+		Vt.push_back(elem);
 	}
 
 	input >> S;
@@ -38,7 +38,7 @@ void Grammar::ReadGrammar(std::ifstream& input)
 }
 
 bool Grammar::VerifyGrammar()
-{	
+{
 	// (1) VN intersectat cu VT = 0
 	for (int i = 0; i < Vn.size(); i++)
 	{
@@ -68,7 +68,7 @@ bool Grammar::VerifyGrammar()
 		if (!contine)
 			return false;
 	}
-	
+
 	// (4) există cel puțin o producție care are în stânga doar S
 	bool exista = false;
 	for (int i = 0; i < P.size(); i++)
@@ -94,6 +94,36 @@ bool Grammar::VerifyGrammar()
 		for (int j = 0; j < dreapta.length(); j++)
 			if (std::find(Vn.begin(), Vn.end(), dreapta[j]) == Vn.end() && std::find(Vt.begin(), Vt.end(), dreapta[j]) == Vt.end())
 				return false;
+	}
+
+	return true;
+}
+
+bool Grammar::IsRegular()
+{
+	// A -> aB, A -> a
+	for (int i = 0; i < P.size(); i++)
+	{
+		// verificare un neterminal in stanga 
+		std::string left = P[i].first;
+		if (left.length() > 1)
+			return false;
+
+		if (std::find(Vn.begin(), Vn.end(), left) == Vn.end())
+			return false;
+
+		// verificare terminal sau terminal + neterminal in dreapta
+		std::string right = P[i].second;
+		if (right.length() > 2)
+			return false;
+
+		if (right.length() == 1 && std::find(Vt.begin(), Vt.end(), right) == Vt.end()) // verif daca e terminal
+			return false;
+
+		if (right.length() == 2
+			&& std::find(Vt.begin(), Vt.end(), right[0]) == Vt.end()
+			&& std::find(Vn.begin(), Vn.end(), right[1]) == Vn.end()) // verif daca nu e terminal + neterminal
+			return false;
 	}
 
 	return true;
