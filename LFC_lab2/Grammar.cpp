@@ -134,45 +134,56 @@ void Grammar::GenerateWord()
 	std::random_device rd;
 	std::mt19937 eng(rd());
 
-	std::vector<std::string> productions;
-	std::string word(1, S);
-	productions.push_back(word);
+	std::vector<std::pair<int, int>> productionInfos; // vector in care avem informatii despre productie (indexul productiei aplicate si locul in care s-a aplicat)
+	std::vector<std::string> productions; // vector de productii
+	std::string word(1, S); 
+	productions.push_back(word); // incepem cu simbolul de start
 
 	while (true) {
+		// vedem indexii productiilor care se pot aplica
 		std::vector<int> applicableProductionIndexes;
 		for (int i = 0; i < P.size(); i++)
 		{
-			if (word.find(P[i].first) != word.length())
+			if (word.find(P[i].first) != std::string::npos) // daca in word se gaseste stanga unei productii o adaugam la vector
 				applicableProductionIndexes.push_back(i);
 		}
 
-		if (applicableProductionIndexes.empty())
+		if (applicableProductionIndexes.empty()) // in cazul in care nu se mai pot aplica productii iesim din while
 			break;
 
 		std::uniform_int_distribution<>distr(0, applicableProductionIndexes.size() - 1);
-		int randomProductionIndex = distr(eng);
-		int productionToApplyIndex = applicableProductionIndexes[randomProductionIndex];
+		int randomProductionIndex = distr(eng); // generam random un index din vectorul cu indexii productiilor aplicabile
+		int productionToApplyIndex = applicableProductionIndexes[randomProductionIndex]; // alegem indexul corespunzator productiei care o vom aplica
 
+		// vedem pozitiile din word la care se poate aplica productia aleasa
 		std::vector<int> occurencesOfProductionInWord;
-		int pos = 0;
-		while (pos < word.length()) {
-			occurencesOfProductionInWord.push_back(pos);
-			pos = word.find(P[productionToApplyIndex].first, pos + 1);
+		int pos = word.find(P[productionToApplyIndex].first); // cautam in word pozitia primei aparitie a productiei
+		while (pos != std::string::npos && pos < word.length()) {
+			occurencesOfProductionInWord.push_back(pos); // adaugam pozitia 
+			pos = word.find(P[productionToApplyIndex].first, pos + 1); // cautam alta aparitie a productiei in word
 		}
 
 		if (!occurencesOfProductionInWord.empty()) {
 			std::uniform_int_distribution<>distr(0, occurencesOfProductionInWord.size() - 1);
-			int randomOccurenceIndex = distr(eng);
-			int occurenceToReplacePos = occurencesOfProductionInWord[randomOccurenceIndex];
+			int randomOccurenceIndex = distr(eng); // generam random un index din vectorul cu pozitiile unde se poate aplica productia
+			int occurenceToReplacePos = occurencesOfProductionInWord[randomOccurenceIndex]; // alegem pozitia din word unde vom inlocui
+			
+			// inlocuim in word productia respectiva cu ce e in dreapta
 			word.replace(occurenceToReplacePos, P[productionToApplyIndex].first.length(), P[productionToApplyIndex].second);
 
-			productions.push_back(word);
+			productions.push_back(word); // adaugam noua productie
+			productionInfos.push_back(std::pair<int, int>(productionToApplyIndex, occurenceToReplacePos)); // adaugam informatiile productiei
 		}
 	}
 
-	for (auto& prod : productions)
+	std::cout << std::endl;
+	std::cout << "\n~~Afisare productii sub forma:~~ \n[productie precedenta] ==([productie aplicata] , [pozitia inlocuita])=> [productie rezultata]:\n\n";
+	for (int i = 0; i < productions.size(); i++)
 	{
-		std::cout << prod << " => ";
+		if (i == productions.size() - 1)
+			std::cout << productions[i] << " (FINAL)";
+		else
+			std::cout << productions[i] << " ==(" << productionInfos[i].first + 1 << "," << productionInfos[i].second << ")=> ";
 	}
 }
 

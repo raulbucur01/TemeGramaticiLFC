@@ -5,7 +5,7 @@
 
 int main() {
 	try {
-		/*std::ifstream input("input.in");
+		std::ifstream input("input.in");
 		Grammar g;
 		g.ReadGrammar(input);
 		g.PrintGrammar();
@@ -14,11 +14,12 @@ int main() {
 		else
 			std::cout << "\nNu e regulata!";
 
-		input.close();*/
+		input.close();
 
+		g.GenerateWord();
 		std::cout << "\n~~~~~~~~~~~~~\n";
 
-		std::ifstream input2("input2.in");
+		/*std::ifstream input2("input2.in");
 		Grammar g2;
 		g2.ReadGrammar(input2);
 		g2.PrintGrammar();
@@ -27,8 +28,8 @@ int main() {
 		else
 			std::cout << "\nNu e regulata!";
 
-		//g2.GenerateWord();
-		input2.close();
+		g2.GenerateWord();
+		input2.close();*/
 	}
 	catch (std::exception e) {
 		std::cout << e.what();
