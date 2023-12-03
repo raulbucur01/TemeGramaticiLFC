@@ -138,6 +138,7 @@
   <ItemGroup>
     <None Include="input.in" />
     <None Include="input2.in" />
+    <None Include="input3.in" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FiniteAutomaton.h" />

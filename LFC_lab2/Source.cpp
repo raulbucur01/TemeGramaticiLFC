@@ -4,6 +4,8 @@
 #include <string>
 #include "FiniteAutomaton.h"
 
+
+
 int main() {
 	try {
 		std::ifstream input("input.in");
@@ -61,9 +63,21 @@ int main() {
 		else {
 			std::cout << "Automatul este nedeterminist(AFN).\n";
 		}
+
+		std::cout << '\n';
+		std::ifstream input3("input3.in");
+		Grammar g3;
+		g3.ReadGrammar(input3);
+		FiniteAutomaton generatedAutomaton = g3.ConvertToAutomaton();
+		std::cout << "Se doreste generarea unui automat finit din gramatica urmatoare:\n";
+		g3.PrintGrammar();
+		std::cout << "Automatul rezultat este:\n";
+		generatedAutomaton.PrintAutomaton();
 	}
 	catch (std::exception e) {
 		std::cout << e.what();
 	}
 	return 0;
+
+
 }

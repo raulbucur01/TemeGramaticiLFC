@@ -38,6 +38,8 @@ void Grammar::ReadGrammar(std::ifstream& input)
 	}
 }
 
+
+
 bool Grammar::VerifyGrammar()
 {
 	// (1) VN intersectat cu VT = 0
@@ -210,4 +212,81 @@ void Grammar::PrintGrammar()
 	{
 		std::cout << "(" << i + 1 << ") " << P[i].first << " -> " << P[i].second << "\n";
 	}
+}
+
+FiniteAutomaton Grammar::ConvertToAutomaton()
+{
+	if (!IsRegular()) {
+		throw std::runtime_error("Gramatica nu este regulata");
+	}
+
+	std::vector<int>  automatonStates(Vn.begin(), Vn.end());
+	std::vector<char> automatonAlphabet(Vt.begin(), Vt.end());
+	std::vector<std::tuple<int, char, std::vector<int>>> automatonTransitions;
+	int automatonInitialState = S;
+	std::vector<int> automatonFinalStates;
+
+	for (char B : Vn) 
+	{
+		for (auto production : P) 
+		{
+			if (production.first == std::string(1, B)) 
+			{
+				if (production.second.size() == 0)
+				{
+					// Daca lambda apartine L(G), adaugam starea curenta si o alta stare in starile finale
+					int newState = B + 256;  // Utilizam valori > 255 pentru a reprezenta stari diferite de terminale
+					if (std::find(automatonFinalStates.begin(), automatonFinalStates.end(), B) == automatonFinalStates.end()) 
+						automatonFinalStates.push_back(B);
+					
+					if (std::find(automatonFinalStates.begin(), automatonFinalStates.end(), newState) == automatonFinalStates.end()) 
+						automatonFinalStates.push_back(newState);
+					
+				}
+				else if(production.second.size() == 1)
+				{
+					// Daca lambda nu apartine L(G), adaugam o alta stare la starile finale 
+					int newState = B + 256;  // Utilizam valori > 255 pentru a reprezenta stari diferite de terminale
+					if (std::find(automatonFinalStates.begin(), automatonFinalStates.end(), newState) == automatonFinalStates.end()) 
+						automatonFinalStates.push_back(newState);
+					
+				}
+			}
+		}
+	}
+
+	for (auto production : P) 
+	{
+		char B = production.first[0];
+		std::string aC = production.second;
+
+		if (aC.size() == 1) 
+		{
+			char a = aC[0];
+			// Daca B -> a apartine P, adaugam tranziția B -> a -> newState
+			int newState = B + 256;  // Utilizam valori > 255 pentru a reprezenta stari diferite de terminale
+			if (std::find(automatonStates.begin(), automatonStates.end(), newState) == automatonStates.end()) {
+				automatonStates.push_back(newState);
+			}
+			automatonTransitions.emplace_back(B, a, std::vector<int>{newState});
+		}
+		else if (aC.size() == 2) 
+		{
+			// Daca B -> aC apartine P, adaugam C in tranzițiile lui B pentru a
+			char a = aC[0];
+			char C = aC[1];
+			if (std::find(automatonStates.begin(), automatonStates.end(), C) == automatonStates.end()) {
+				automatonStates.push_back(C);
+			}
+			automatonTransitions.emplace_back(B, a, std::vector<int>{C});
+		}
+	}
+
+	return FiniteAutomaton(
+		automatonStates,
+		automatonAlphabet,
+		automatonTransitions,
+		automatonInitialState,
+		automatonFinalStates
+	);
 }

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <set>
-
+#include "FiniteAutomaton.h"
 class Grammar
 {
 private:
@@ -19,5 +19,6 @@ public:
 	void GenerateWord();
 	void PrintGrammar();
 	void ReadGrammar(std::ifstream& input);
+	FiniteAutomaton ConvertToAutomaton();
 };
 
