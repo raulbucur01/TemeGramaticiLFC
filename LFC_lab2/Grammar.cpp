@@ -137,7 +137,7 @@ void Grammar::GenerateWord()
 	std::mt19937 eng(rd());
 
 	std::vector<std::pair<int, int>> productionInfos; // vector in care avem informatii despre productie (indexul productiei aplicate si locul in care s-a aplicat)
-	std::vector<std::string> productions; // vector de productii
+	std::vector<std::string> productions; // vector de productii prin care se trece
 	std::string word(1, S); 
 	productions.push_back(word); // incepem cu simbolul de start
 
