@@ -115,18 +115,14 @@ bool FiniteAutomaton::CheckWord(const std::string& word)
 
 bool FiniteAutomaton::IsDeterministic()
 {
-    std::set<std::pair<int, char>> seenTransitions;
 
     for (const auto& transition : transitions) {
-        int fromState = std::get<0>(transition);
-        char symbol = std::get<1>(transition);
+        const auto& toStates = std::get<2>(transition);
 
-        // Verificam daca aceasta tranzitie a mai fost vazuta
-        if (!seenTransitions.insert({ fromState, symbol }).second) {
-            // Daca exista mai mult de o tranzitie pentru aceeasi stare si acelasi simbol, nu este determinist
+        if (toStates.size() > 1) {
             return false;
         }
-    }
+    }s
 
     // Toate tranzitiile au fost unice, deci automatul este determinist
     return true;
