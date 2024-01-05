@@ -21,7 +21,7 @@
     <ClCompile Include="Grammar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DeterministicFiniteAutomaton.cpp">
+    <ClCompile Include="PushDownAutomaton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,13 +29,12 @@
     <None Include="input.in" />
     <None Include="input2.in" />
     <None Include="input3.in" />
-    <None Include="ER.in" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Grammar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DeterministicFiniteAutomaton.h">
+    <ClInclude Include="PushDownAutomaton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

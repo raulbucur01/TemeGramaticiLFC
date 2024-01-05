@@ -1,6 +1,6 @@
-#include "DeterministicFiniteAutomaton.h"
+#include "PushDownAutomaton.h"
 
-DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(
+PushDownAutomaton::PushDownAutomaton(
     std::vector<int> states,
     std::vector<char> alphabet,
     std::vector<std::tuple<int, char, std::vector<int>>> transitions,
@@ -15,7 +15,7 @@ DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(
 {
 }
 
-bool DeterministicFiniteAutomaton::VerifyAutomaton() {
+bool PushDownAutomaton::VerifyAutomaton() {
     // Verificare stari si alfabet
     if (states.empty() || alphabet.empty()) {
         std::cerr << "Eroare: Stari si alfabetul nu pot fi goale.\n";
@@ -63,13 +63,12 @@ bool DeterministicFiniteAutomaton::VerifyAutomaton() {
         }
     }
 
-    if (!IsDeterministic())
-        return false;
-
+    // Nu a dat erori pe parcurs, automatul este valid
+    std::cout << "Automatul este valid.\n" << "\n";
     return true;
 }
 
-void DeterministicFiniteAutomaton::PrintAutomaton() {
+void PushDownAutomaton::PrintAutomaton() {
     std::cout << "Stari: { ";
     for (const auto& state : states) {
         std::cout << state << " ";
@@ -104,7 +103,7 @@ void DeterministicFiniteAutomaton::PrintAutomaton() {
     std::cout << "}\n";
 }
 
-bool DeterministicFiniteAutomaton::CheckWord(const std::string& word)
+bool PushDownAutomaton::CheckWord(const std::string& word)
 {
     if (!VerifyAutomaton()) {
         std::cerr << "Automatul nu este valid. Verificati definirea acestuia.\n";
@@ -114,7 +113,7 @@ bool DeterministicFiniteAutomaton::CheckWord(const std::string& word)
     return Simulation(word, initial_state);
 }
 
-bool DeterministicFiniteAutomaton::IsDeterministic()
+bool PushDownAutomaton::IsDeterministic()
 {
 
     for (const auto& transition : transitions) {
@@ -129,7 +128,7 @@ bool DeterministicFiniteAutomaton::IsDeterministic()
     return true;
 }
 
-bool DeterministicFiniteAutomaton::Simulation(const std::string& word, int currentState)
+bool PushDownAutomaton::Simulation(const std::string& word, int currentState)
 {
     // Verificare daca starea curenta este stare finala
     if (word.empty()) {

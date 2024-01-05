@@ -131,18 +131,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DeterministicFiniteAutomaton.cpp" />
+    <ClCompile Include="PushDownAutomaton.cpp" />
     <ClCompile Include="Grammar.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ER.in" />
     <None Include="input.in" />
     <None Include="input2.in" />
     <None Include="input3.in" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DeterministicFiniteAutomaton.h" />
+    <ClInclude Include="PushDownAutomaton.h" />
     <ClInclude Include="Grammar.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
