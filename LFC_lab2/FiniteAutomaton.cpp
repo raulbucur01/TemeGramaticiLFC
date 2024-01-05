@@ -122,7 +122,7 @@ bool FiniteAutomaton::IsDeterministic()
         if (toStates.size() > 1) {
             return false;
         }
-    }s
+    }
 
     // Toate tranzitiile au fost unice, deci automatul este determinist
     return true;
