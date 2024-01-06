@@ -124,7 +124,7 @@ void PushDownAutomaton::DisplayAutomaton() const {
 }
 
 bool PushDownAutomaton::Simulation(char inputSymbol, int& currentState, std::string& stack) const {
-    // Căutați tranzacția curentă
+    
     for (const auto& transition : transitions) {
         int fromState, toState;
         std::string readSymbol, stackTop;
@@ -136,52 +136,58 @@ bool PushDownAutomaton::Simulation(char inputSymbol, int& currentState, std::str
         toState = std::get<3>(transition).first;
         stackTop = std::get<3>(transition).second;
 
-        // Verificați dacă tranzacția este validă pentru starea curentă și simbolul de intrare
+        
         if (fromState == currentState && (readSymbol[0] == inputSymbol || readSymbol == "lambda") ) {
-            // Efectuați tranziția
+            
             currentState = toState;
-            // Manipulați stiva
+            
             if (stackTop == "lambda" || readSymbol == "lambda")
                 stack.pop_back();
             else
 
             {
-                stack.pop_back();  // Scoateți simbolul din vârful stivei
+                stack.pop_back();  
                 for (char c : stackTop) {
-                    stack.push_back(c);  // Adăugați simbolurile în stiva curentă
+                    stack.push_back(c);  
                 }
             }
             return true;
         }
     }
 
-    std::cout << "Nu există o tranziție validă pentru starea " << currentState
-        << " și simbolul de intrare '" << inputSymbol << "' cu stiva '" << stack << "'" << std::endl;
+    std::cout << "Nu exista o tranzitie valida pentru starea " << currentState
+        << " si simbolul de intrare " << inputSymbol << " cu stiva " << stack << "'" << std::endl;
 
     return false;
 }
 
 bool PushDownAutomaton::ProcessWord(const std::string& word) {
-    // Inițializare cu starea inițială și simbolul inițial de stivă
+    
     int currentState = initial_state;
     std::string stack = std::string(1, initial_stack_symbol);
 
-    // Pentru fiecare simbol din cuvânt
+    
     for (char inputSymbol : word) {
-        // Apelați funcția de simulare cu simbolul curent și stiva curentă
+        
         if (!Simulation(inputSymbol, currentState, stack)) {
-            std::cout << "Cuvântul \"" << word << "\" nu este acceptat." << std::endl;
+            std::cout << "Cuvantul \"" << word << "\" nu este acceptat." << std::endl;
             return false;
         }
     }
+    
+    if (currentState == std::get<0>(transitions.back()))
+    {
+        currentState = std::get<3>(transitions.back()).first;
+        stack.pop_back();
+    }
 
-    // Verificați dacă starea curentă este o stare finală
+    
     if (std::find(final_states.begin(), final_states.end(), currentState) != final_states.end()) {
-        std::cout << "Cuvântul \"" << word << "\" este acceptat." << std::endl;
+        std::cout << "Cuvantul \"" << word << "\" este acceptat." << std::endl;
         return true;
     }
     else {
-        std::cout << "Cuvântul \"" << word << "\" nu este acceptat." << std::endl;
+        std::cout << "Cuvantul \"" << word << "\" nu este acceptat." << std::endl;
         return false;
     }
 }
