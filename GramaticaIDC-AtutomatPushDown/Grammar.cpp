@@ -38,6 +38,159 @@ void Grammar::ReadGrammar(std::ifstream& input)
 	}
 }
 
+void Grammar::RemoveInaccessibleSymbols()
+{
+	std::vector<char> V, V1;
+	V.push_back(S);
+	V1.push_back(S);
+	bool ok = false;
+	while (ok == false)
+	{
+		for (auto elem : V)
+		{
+			for (auto prod : P)
+
+				if (prod.first[0] == elem)
+				{
+					for (int i = 0; i < prod.second.size(); i++)
+					{
+						if (std::find(Vn.begin(), Vn.end(), prod.second[i]) != Vn.end())
+						{
+							auto it = std::find(V1.begin(), V1.end(), prod.second[i]);
+							if (it == V1.end())
+								V1.push_back(prod.second[i]);
+						}
+					}
+				}
+
+		}
+		if (V.size() == V1.size())
+			ok = true;
+		V.clear();
+		V = V1;
+
+	}
+	std::vector < std::pair<std::string, std::string>> prodNou;
+	for (int i = 0; i < P.size(); i++)
+	{
+		auto it = std::find(V.begin(), V.end(), P[i].first[0]);
+		if (it != V.end())
+		{
+			prodNou.push_back(P[i]);
+		}
+	}
+
+	P = prodNou;
+}
+
+void Grammar::RemoveSimbolNotGenerating()
+{
+	std::vector<std::pair<std::string, std::string>>prodNou;
+	std::vector<char> V, V1;
+	for (int i = 0; i < P[0].second.size(); i++)
+	{
+		if (std::find(Vn.begin(), Vn.end(), P[0].second[i]) != Vn.end())
+			V1.push_back(P[0].second[i]);
+
+	}
+	bool ok = false;
+	V = V1;
+	while (ok == false)
+	{
+		for (auto prod : P)
+		{
+			for (auto letter : prod.second)
+			{
+				if (std::find(Vn.begin(), Vn.end(), letter) != Vn.end())
+				{
+					if (std::find(V.begin(), V.end(), letter) == V.end())
+					{
+						V.push_back(letter);
+					}
+				}
+			}
+		}
+		if (V.size() == V1.size())
+		{
+			ok = true;
+		}
+		V1.clear();
+		V1 = V;
+	}
+	for (int i = 0; i < P.size(); i++)
+	{
+		if (std::find(V.begin(), V.end(), P[i].first[0]) != V.end())
+		{
+			bool onlyNeterminalsAccepted = true;
+			for (auto letter : P[i].second)
+			{
+				if (std::find(Vn.begin(), Vn.end(), letter) != Vn.end())
+					if (std::find(V.begin(), V.end(), letter) == V.end())
+					{
+						onlyNeterminalsAccepted = false;
+
+
+					}
+			}
+			if (onlyNeterminalsAccepted == true)
+			{
+				prodNou.push_back(P[i]);
+			}
+		}
+		else
+		{
+
+			bool onlyTerminal = true;
+			for (auto letter : P[i].second)
+			{
+				if (std::find(Vn.begin(), Vn.end(), letter) != Vn.end())
+					onlyTerminal = false;
+			}
+			if (onlyTerminal == true)
+			{
+				prodNou.push_back(P[i]);
+			}
+		}
+	}
+	P = prodNou;
+}
+
+//void Grammar::RemoveSymbolRename(std::vector<std::pair<std::string, std::string>> prod, std::vector<std::pair<std::string, std::string>>redenumiri)
+//{
+//	if (redenumiri.size() == 0)
+//	{
+//		return m_productii;
+//	}
+//
+//	std::vector<std::pair<std::string, std::string>> prodNou = P;
+//
+//	for (auto redenumire : redenumiri)
+//	{
+//		std::string first = redenumire.first;
+//		std::string second = redenumire.second;
+//
+//		for (auto& prod : m_productii)
+//		{
+//			if (prod.first == second)
+//			{
+//				prodNou.push_back({ first, prod.second });
+//			}
+//		}
+//	}
+//
+//	for (int i = 0; i < prodNou.size(); i++)
+//	{
+//		if (prodNou[i].second.size() == 1)
+//		{
+//			if (std::find(Vn.begin(),Vn.end(), prodNou[i].second[0]) != Vn.end())
+//			{
+//				prodNou.erase(prodNou.begin() + i, prodNou.begin() + i + 1);
+//			}
+//		}
+//	}
+//	P = prodNou;
+//}
+
 
 
 bool Grammar::VerifyGrammar()
@@ -164,7 +317,7 @@ void Grammar::GenerateWord()
 
 	std::vector<std::pair<int, int>> productionInfos; // vector in care avem informatii despre productie (indexul productiei aplicate si locul in care s-a aplicat)
 	std::vector<std::string> productions; // vector de productii prin care se trece
-	std::string word(1, S); 
+	std::string word(1, S);
 	productions.push_back(word); // incepem cu simbolul de start
 
 	while (true) {
@@ -195,7 +348,7 @@ void Grammar::GenerateWord()
 			std::uniform_int_distribution<>distr(0, occurencesOfProductionInWord.size() - 1);
 			int randomOccurenceIndex = distr(eng); // generam random un index din vectorul cu pozitiile unde se poate aplica productia
 			int occurenceToReplacePos = occurencesOfProductionInWord[randomOccurenceIndex]; // alegem pozitia din word unde vom inlocui
-			
+
 			// inlocuim in word productia respectiva cu ce e in dreapta
 			word.replace(occurenceToReplacePos, P[productionToApplyIndex].first.length(), P[productionToApplyIndex].second);
 
@@ -252,41 +405,41 @@ PushDownAutomaton Grammar::ConvertToAutomaton()
 	int automatonInitialState = S;
 	std::vector<int> automatonFinalStates;
 
-	for (char B : Vn) 
+	for (char B : Vn)
 	{
-		for (auto production : P) 
+		for (auto production : P)
 		{
-			if (production.first == std::string(1, B)) 
+			if (production.first == std::string(1, B))
 			{
 				if (production.second.size() == 0)
 				{
 					// Daca lambda apartine L(G), adaugam starea curenta si o alta stare in starile finale
 					int newState = B + 256;  // Utilizam valori > 255 pentru a reprezenta stari diferite de terminale
-					if (std::find(automatonFinalStates.begin(), automatonFinalStates.end(), B) == automatonFinalStates.end()) 
+					if (std::find(automatonFinalStates.begin(), automatonFinalStates.end(), B) == automatonFinalStates.end())
 						automatonFinalStates.push_back(B);
-					
-					if (std::find(automatonFinalStates.begin(), automatonFinalStates.end(), newState) == automatonFinalStates.end()) 
+
+					if (std::find(automatonFinalStates.begin(), automatonFinalStates.end(), newState) == automatonFinalStates.end())
 						automatonFinalStates.push_back(newState);
-					
+
 				}
-				else if(production.second.size() == 1)
+				else if (production.second.size() == 1)
 				{
 					// Daca lambda nu apartine L(G), adaugam o alta stare la starile finale 
 					int newState = B + 256;  // Utilizam valori > 255 pentru a reprezenta stari diferite de terminale
-					if (std::find(automatonFinalStates.begin(), automatonFinalStates.end(), newState) == automatonFinalStates.end()) 
+					if (std::find(automatonFinalStates.begin(), automatonFinalStates.end(), newState) == automatonFinalStates.end())
 						automatonFinalStates.push_back(newState);
-					
+
 				}
 			}
 		}
 	}
 
-	for (auto production : P) 
+	for (auto production : P)
 	{
 		char B = production.first[0];
 		std::string aC = production.second;
 
-		if (aC.size() == 1) 
+		if (aC.size() == 1)
 		{
 			char a = aC[0];
 			// Daca B -> a apartine P, adaugam tranziția B -> a -> newState
@@ -296,7 +449,7 @@ PushDownAutomaton Grammar::ConvertToAutomaton()
 			}
 			automatonTransitions.emplace_back(B, a, std::vector<int>{newState});
 		}
-		else if (aC.size() == 2) 
+		else if (aC.size() == 2)
 		{
 			// Daca B -> aC apartine P, adaugam C in tranzițiile lui B pentru a
 			char a = aC[0];

@@ -19,8 +19,17 @@ int main() {
 
 		input.close();
 
-		g.GenerateWord();
+		//g.GenerateWord();
 		std::cout << "\n~~~~~~~~~~~~~\n";
+
+		//g.SimplifyGrammar();
+		g.RemoveInaccessibleSymbols();
+		g.PrintGrammar();
+		/*g.RemoveSimbolNotGenerating();
+		g.PrintGrammar();
+		g.RemoveSimbolNotGenerating();
+		g.PrintGrammar();*/
+
 
 		/*std::ifstream input2("input2.in");
 		Grammar g2;
@@ -34,7 +43,7 @@ int main() {
 		g2.GenerateWord();
 		input2.close();*/
 
-		PushDownAutomaton automaton(
+		/*PushDownAutomaton automaton(
 			{ 0, 1, 2 },                
 			{ 'a', 'b' },               
 			{ {0, 'a', {1, 2} },         
@@ -72,7 +81,7 @@ int main() {
 		std::cout << "Se doreste generarea unui automat finit din gramatica urmatoare:\n";
 		g3.PrintGrammar();
 		std::cout << "Automatul rezultat este:\n";
-		generatedAutomaton.PrintAutomaton();
+		generatedAutomaton.PrintAutomaton();*/
 	}
 	catch (std::exception e) {
 		std::cout << e.what();
