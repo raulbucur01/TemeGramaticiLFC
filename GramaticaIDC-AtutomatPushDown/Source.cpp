@@ -9,28 +9,31 @@
 int main() {
 	try {
 		std::ifstream input("input.in");
-		Grammar g;
-		g.ReadGrammar(input);
-		g.PrintGrammar();
-		if (g.IsIDC())
-			std::cout << "\nE IDC!";
-		else
-			std::cout << "\nNu e IDC!";
+		//Grammar g;
+		//g.ReadGrammar(input);
+		//g.PrintGrammar();
+		//if (g.IsIDC())
+		//	std::cout << "\nE IDC!";
+		//else
+		//	std::cout << "\nNu e IDC!";
 
-		input.close();
+		//input.close();
 
-		//g.GenerateWord();
-		std::cout << "\n~~~~~~~~~~~~~\n";
+		////g.GenerateWord();
+		//std::cout << "\n~~~~~~~~~~~~~\n";
 
-		//g.SimplifyGrammar();
-		g.RemoveInaccessibleSymbols();
-		g.PrintGrammar();
-		/*g.RemoveSimbolNotGenerating();
-		g.PrintGrammar();
-		g.RemoveSimbolNotGenerating();
-		g.PrintGrammar();*/
+		////g.SimplifyGrammar();
+		//g.RemoveInaccessibleSymbols();
+		//g.PrintGrammar();
+		///*g.RemoveSimbolNotGenerating();
+		//g.PrintGrammar();
+		//g.RemoveSimbolNotGenerating();
+		//g.PrintGrammar();*/
 
-
+		PushDownAutomaton pda;
+		pda.ReadAutomaton("input.in");
+		pda.DisplayAutomaton();
+		pda.ProcessWord("aaabbb");
 		/*std::ifstream input2("input2.in");
 		Grammar g2;
 		g2.ReadGrammar(input2);

@@ -1,17 +1,16 @@
-5   
-S A B C D
+3
+0 1 2
 2
 a b
-S
-11
-S A
-S B
-A aB
-A bS
-A b
-B BD
-B Ba
-C AS 
-C b
-D bD
-D b
+2
+Z A
+5
+0 a Z 0 AZ
+0 a A 0 AA
+0 b A 1 lambda
+1 b A 1 lambda
+1 lambda Z 2 Z
+0
+Z
+1
+2
