@@ -5,6 +5,7 @@
 #include <iostream>
 #include <set>
 #include "PushDownAutomaton.h"
+#include <random>
 class Grammar
 {
 private:
@@ -17,7 +18,7 @@ public:
 	bool VerifyGrammar();
 	bool IsRegular();
 	bool IsIDC();
-	void GenerateWord();
+	std::string GenerateWord();
 	void PrintGrammar();
 	void ReadGrammar(std::ifstream& input);
 	void RemoveInaccessibleSymbols();

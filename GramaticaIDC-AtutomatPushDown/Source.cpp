@@ -38,17 +38,21 @@ int main() {
 			std::cout << "E determinist\n";
 		else
 			std::cout << "Nu e determinist\n";
-		/*std::ifstream input2("input2.in");
+		input.close();
+        
+		std::ifstream input2("input2.in");
 		Grammar g2;
 		g2.ReadGrammar(input2);
-		g2.PrintGrammar();
+		/*g2.PrintGrammar();
 		if (g2.IsRegular())
 			std::cout << "\nE regulata!";
 		else
-			std::cout << "\nNu e regulata!";
-
-		g2.GenerateWord();
-		input2.close();*/
+			std::cout << "\nNu e regulata!";*/
+		std::string word;
+		//word = g2.GenerateWord();
+		std::cin >> word;
+		pda.ProcessWord(word);
+		input2.close();
 
 		/*PushDownAutomaton automaton(
 			{ 0, 1, 2 },                

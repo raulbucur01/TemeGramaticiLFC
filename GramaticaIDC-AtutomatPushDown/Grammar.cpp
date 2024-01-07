@@ -1,5 +1,4 @@
 ﻿#include "Grammar.h"
-#include <random>
 
 void Grammar::ReadGrammar(std::ifstream& input)
 {
@@ -310,7 +309,7 @@ bool Grammar::IsIDC()
 	return true;
 }
 
-void Grammar::GenerateWord()
+std::string Grammar::GenerateWord()
 {
 	std::random_device rd;
 	std::mt19937 eng(rd());
@@ -362,7 +361,10 @@ void Grammar::GenerateWord()
 	for (int i = 0; i < productions.size(); i++)
 	{
 		if (i == productions.size() - 1)
-			std::cout << productions[i] << " (FINAL)";
+		{
+			std::cout << productions[i] << " (FINAL)" << "\n";
+			return productions[i];
+		}
 		else
 			std::cout << productions[i] << " ==(" << productionInfos[i].first + 1 << "," << productionInfos[i].second << ")=> ";
 	}
