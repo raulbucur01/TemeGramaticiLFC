@@ -73,11 +73,11 @@ void PushDownAutomaton::ReadAutomaton(std::string filename)
         for (int i = 0; i < no; i++)
         {
             std::pair<int, std::string> right;
+            fin >> q1 >> pd;
             right = std::make_pair(q1, pd);
             transition.result.push_back(right);
         }
-         transitions.push_back(transition);
-         
+        transitions.push_back(transition);
     }
     fin >> initial_state >> initial_stack_symbol;
 
