@@ -4,7 +4,7 @@ PushDownAutomaton::PushDownAutomaton(
     std::vector<int> states,
     std::vector<char> alphabet,
     std::vector<char> stack_alphabet,
-    std::vector<std::tuple<int, std::string, char, std::pair<int, std::string>>> transitions,
+    std::vector<Transition> transitions,
     int initial_state,
     char initial_stack_symbol,
     std::vector<int> final_states
@@ -62,12 +62,22 @@ void PushDownAutomaton::ReadAutomaton(std::string filename)
         int q1;
         std::string pd;
 
-        fin >> q >> c1 >> c2 >> q1 >> pd;
-        std::pair<int, std::string> right;
-        right = std::make_pair(q1, pd);
-        std::tuple<int, std::string, char, std::pair<int, std::string>> transition;
-        transition = std::make_tuple(q, c1, c2, right);
-        transitions.push_back(transition);
+        int no;
+        fin >> q >> c1 >> c2;
+        fin.get();
+        fin >> no;
+        Transition transition;
+        transition.state = q;
+        transition.symbol = c1;
+        transition.stackSymbol = c2;
+        for (int i = 0; i < no; i++)
+        {
+            std::pair<int, std::string> right;
+            right = std::make_pair(q1, pd);
+            transition.result.push_back(right);
+        }
+         transitions.push_back(transition);
+         
     }
     fin >> initial_state >> initial_stack_symbol;
 
@@ -102,15 +112,15 @@ void PushDownAutomaton::DisplayAutomaton() const {
 
     std::cout << "Transitions :" << std::endl;
     for (const auto& transition : transitions) {
-        int fromState;
-        std::string inputSymbol;
-        char stackSymbol;
-        std::pair<int, std::string> toStateAndStack;
 
-        std::tie(fromState, inputSymbol, stackSymbol, toStateAndStack) = transition;
-
-        std::cout << "(" << fromState << ", " << inputSymbol << ", " << stackSymbol << ") -> ("
-            << toStateAndStack.first << ", " << toStateAndStack.second << ")" << std::endl;
+        std::cout << "(" << transition.state << ", " << transition.symbol << ", " << transition.stackSymbol << ") -> ";
+        for (int i = 0; i < transition.result.size(); i++)
+        {
+            std::cout << "(" << transition.result[i].first << ", " << transition.result[i].second << ") ";
+            
+        }
+        std::cout << '\n';
+            
     }
 
     std::cout << "Initial State : " << initial_state << std::endl;
@@ -126,32 +136,27 @@ void PushDownAutomaton::DisplayAutomaton() const {
 bool PushDownAutomaton::Simulation(char inputSymbol, int& currentState, std::string& stack) const {
     
     for (const auto& transition : transitions) {
-        int fromState, toState;
-        std::string readSymbol, stackTop;
-        char stackSymbol;
-
-        fromState = std::get<0>(transition);
-        readSymbol = std::get<1>(transition);
-        stackSymbol = std::get<2>(transition);
-        toState = std::get<3>(transition).first;
-        stackTop = std::get<3>(transition).second;
-
         
-        if (fromState == currentState && (readSymbol[0] == inputSymbol || readSymbol == "lambda") ) {
-            
-            currentState = toState;
-            
-            if (stackTop == "lambda" || readSymbol == "lambda")
-                stack.pop_back();
-            else
+        for (int i = 0; i < transition.result.size(); i++)
+        {
 
-            {
-                stack.pop_back();  
-                for (char c : stackTop) {
-                    stack.push_back(c);  
+
+            if (transition.state == currentState && (transition.symbol[0] == inputSymbol || transition.symbol == "lambda")) {
+
+                currentState = transition.result[i].first;
+
+                if (transition.result[i].second == "lambda" || transition.symbol == "lambda")
+                    if(!stack.empty())stack.pop_back();
+                else
+
+                {
+                    if (!stack.empty())stack.pop_back();
+                    for (char c : transition.result[i].second) {
+                        stack.push_back(c);
+                    }
                 }
+                return true;
             }
-            return true;
         }
     }
 
@@ -175,9 +180,9 @@ bool PushDownAutomaton::ProcessWord(const std::string& word) {
         }
     }
     
-    if (currentState == std::get<0>(transitions.back()))
+    if (currentState == transitions.back().state)
     {
-        currentState = std::get<3>(transitions.back()).first;
+        currentState = transitions.back().result.back().first;
         stack.pop_back();
     }
 
@@ -190,6 +195,15 @@ bool PushDownAutomaton::ProcessWord(const std::string& word) {
         std::cout << "Cuvantul \"" << word << "\" nu este acceptat." << std::endl;
         return false;
     }
+}
+bool PushDownAutomaton::isDeterministic()
+{
+    for (auto& transition : transitions)
+    {
+        if (transition.result.size() != 1)
+            return false;
+    }
+    return true;
 }
 //bool PushDownAutomaton::VerifyAutomaton() {
 //    // Verificare stari si alfabet

@@ -5,11 +5,11 @@ a b
 2
 Z A
 5
-0 a Z 0 AZ
-0 a A 0 AA
-0 b A 1 lambda
-1 b A 1 lambda
-1 lambda Z 2 Z
+0 a Z 1 0 AZ 
+0 a A 1 0 AA
+0 b A 1 1 lambda
+1 b A 1 1 lambda
+1 lambda Z 1 2 Z
 0
 Z
 1

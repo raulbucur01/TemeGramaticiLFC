@@ -34,6 +34,10 @@ int main() {
 		pda.ReadAutomaton("input.in");
 		pda.DisplayAutomaton();
 		pda.ProcessWord("aaabbb");
+		if (pda.isDeterministic())
+			std::cout << "E determinist\n";
+		else
+			std::cout << "Nu e determinist\n";
 		/*std::ifstream input2("input2.in");
 		Grammar g2;
 		g2.ReadGrammar(input2);
