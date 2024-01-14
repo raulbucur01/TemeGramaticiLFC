@@ -146,9 +146,10 @@ bool PushDownAutomaton::Simulation(char inputSymbol, int& currentState, std::str
                 currentState = transition.result[i].first;
 
                 if (transition.result[i].second == "lambda" || transition.symbol == "lambda")
-                    if(!stack.empty())stack.pop_back();
+                {
+                    if (!stack.empty())stack.pop_back();
+                }
                 else
-
                 {
                     if (!stack.empty())stack.pop_back();
                     for (char c : transition.result[i].second) {
@@ -183,9 +184,13 @@ bool PushDownAutomaton::ProcessWord(const std::string& word) {
     if (currentState == transitions.back().state)
     {
         currentState = transitions.back().result.back().first;
-        stack.pop_back();
+        if (!stack.empty())
+            stack.pop_back();
+        else return false;
     }
 
+    if (!stack.empty())
+        return false;
     
     if (std::find(final_states.begin(), final_states.end(), currentState) != final_states.end()) {
         std::cout << "Cuvantul \"" << word << "\" este acceptat." << std::endl;

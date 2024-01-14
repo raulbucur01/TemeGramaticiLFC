@@ -43,14 +43,15 @@ int main() {
 		std::ifstream input2("input2.in");
 		Grammar g2;
 		g2.ReadGrammar(input2);
+		g2.IsIDC();
 		/*g2.PrintGrammar();
 		if (g2.IsRegular())
 			std::cout << "\nE regulata!";
 		else
 			std::cout << "\nNu e regulata!";*/
 		std::string word;
-		//word = g2.GenerateWord();
-		std::cin >> word;
+		word = g2.GenerateWord();
+		//std::cin >> word;
 		pda.ProcessWord(word);
 		input2.close();
 
