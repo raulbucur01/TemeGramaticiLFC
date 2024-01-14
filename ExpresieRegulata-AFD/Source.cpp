@@ -33,6 +33,8 @@ bool ERisValid(std::string ER) {
 		else
 			if (ER[i] == ')')
 				count--;
+		if (count < 0)
+			return false;
 	}
 	
 	if (count != 0)
