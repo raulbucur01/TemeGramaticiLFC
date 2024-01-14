@@ -91,7 +91,7 @@ void PushDownAutomaton::ReadAutomaton(std::string filename)
 
 }
 
-void PushDownAutomaton::DisplayAutomaton() const {
+void PushDownAutomaton::PrintAutomaton() const {
     std::cout << "States : ";
     for (int state : states) {
         std::cout << state << " ";
@@ -166,7 +166,7 @@ bool PushDownAutomaton::Simulation(char inputSymbol, int& currentState, std::str
     return false;
 }
 
-bool PushDownAutomaton::ProcessWord(const std::string& word) {
+bool PushDownAutomaton::CheckWord(const std::string& word) {
     
     int currentState = initial_state;
     std::string stack = std::string(1, initial_stack_symbol);
@@ -175,7 +175,7 @@ bool PushDownAutomaton::ProcessWord(const std::string& word) {
     for (char inputSymbol : word) {
         
         if (!Simulation(inputSymbol, currentState, stack)) {
-            std::cout << "Cuvantul \"" << word << "\" nu este acceptat." << std::endl;
+            std::cout << "\nCuvantul \"" << word << "\" nu este acceptat." << std::endl;
             return false;
         }
     }
@@ -188,15 +188,15 @@ bool PushDownAutomaton::ProcessWord(const std::string& word) {
 
     
     if (std::find(final_states.begin(), final_states.end(), currentState) != final_states.end()) {
-        std::cout << "Cuvantul \"" << word << "\" este acceptat." << std::endl;
+        std::cout << "\nCuvantul \"" << word << "\" este acceptat." << std::endl;
         return true;
     }
     else {
-        std::cout << "Cuvantul \"" << word << "\" nu este acceptat." << std::endl;
+        std::cout << "\nCuvantul \"" << word << "\" nu este acceptat." << std::endl;
         return false;
     }
 }
-bool PushDownAutomaton::isDeterministic()
+bool PushDownAutomaton::IsDeterministic()
 {
     for (auto& transition : transitions)
     {

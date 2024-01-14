@@ -9,7 +9,10 @@ bool ERisValid(std::string ER) {
 	if (ER.find(' ') != std::string::npos)
 		return false;
 
-	// sa nu fie primul caracter *
+	// sa nu fie primul caracter + sau *
+	if (ER[0] == '+')
+		return false;
+
 	if (ER[0] == '*')
 		return false;
 
@@ -17,10 +20,16 @@ bool ERisValid(std::string ER) {
 	if (ER[0] == '|')
 	return false;
 
-	// sa nu fie paranteze goale
+	// sa nu fie paranteze goale sau (* sau (|)
 	for (int i = 0; i < ER.length(); i++)
 	{
 		if (ER[i] == '(' && ER[i + 1] == ')')
+			return false;
+
+		if (ER[i] == '*' && ER[i - 1] == '(')
+			return false;
+
+		if (ER[i] == '|' && (ER[i - 1] == '(' && ER[i + 1] == ')' && i + 1 < ER.length() && i - 1 > 0))
 			return false;
 	}
 
@@ -86,7 +95,7 @@ int main() {
 			  {1, 'b', {2} },
 			  {2, 'a', {0} } },
 			  0,                         
-			  { 1, 2}                     
+			  {1}                     
 		);
 
 		if (automaton.VerifyAutomaton())
@@ -114,7 +123,7 @@ int main() {
 			std::cout << "Cuvantul nu este acceptat.\n" << "\n";
 		}
 
-		std::cout << '\n';
+		/*std::cout << '\n';
 		std::ifstream input3("input3.in");
 		Grammar g3;
 		g3.ReadGrammar(input3);
@@ -122,7 +131,7 @@ int main() {
 		std::cout << "Se doreste generarea unui automat finit din gramatica urmatoare:\n";
 		g3.PrintGrammar();
 		std::cout << "Automatul rezultat este:\n";
-		generatedAutomaton.PrintAutomaton();
+		generatedAutomaton.PrintAutomaton();*/
 	}
 	catch (std::exception e) {
 		std::cout << e.what();

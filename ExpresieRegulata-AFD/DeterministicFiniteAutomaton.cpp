@@ -16,6 +16,9 @@ DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(
 }
 
 bool DeterministicFiniteAutomaton::VerifyAutomaton() {
+    if (!IsDeterministic())
+        return false;
+
     // Verificare stari si alfabet
     if (states.empty() || alphabet.empty()) {
         std::cerr << "Eroare: Stari si alfabetul nu pot fi goale.\n";
@@ -62,9 +65,6 @@ bool DeterministicFiniteAutomaton::VerifyAutomaton() {
             }
         }
     }
-
-    if (!IsDeterministic())
-        return false;
 
     return true;
 }

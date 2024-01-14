@@ -17,12 +17,10 @@ public:
 	bool VerifyGrammar();
 	bool IsRegular();
 	bool IsIDC();
-	void GenerateWord();
+	std::string GenerateWord();
 	void PrintGrammar();
 	void ReadGrammar(std::ifstream& input);
 	void RemoveInaccessibleSymbols();
 	void RemoveSimbolNotGenerating();
-	void RemoveSymbolRename(std::vector<std::pair<std::string, std::string>> prod, std::vector<std::pair<std::string, std::string>>redenumiri);
-	PushDownAutomaton ConvertToAutomaton();
 };
 
