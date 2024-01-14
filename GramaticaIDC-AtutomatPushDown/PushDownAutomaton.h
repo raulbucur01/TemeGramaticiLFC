@@ -26,10 +26,10 @@ public:
     PushDownAutomaton();
 
     void ReadAutomaton(std::string filename);
-    void DisplayAutomaton() const;
+    void PrintAutomaton() const;
     bool Simulation(char inputSymbol, int& currentState, std::string& stack) const;
-    bool ProcessWord(const std::string& word);
-    bool isDeterministic();
+    bool CheckWord(const std::string& word);
+    bool IsDeterministic();
 private:
     std::vector<int> states;                                  // Q - states
     std::vector<char> alphabet;                               // Σ - input alphabet

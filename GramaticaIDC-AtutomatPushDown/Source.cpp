@@ -8,92 +8,33 @@
 
 int main() {
 	try {
-		std::ifstream input("input.in");
-		//Grammar g;
-		//g.ReadGrammar(input);
-		//g.PrintGrammar();
-		//if (g.IsIDC())
-		//	std::cout << "\nE IDC!";
-		//else
-		//	std::cout << "\nNu e IDC!";
+		std::ifstream input("input2.in");
+		Grammar g;
+		g.ReadGrammar(input);
+		g.PrintGrammar();
+		if (g.IsIDC())
+			std::cout << "\nE IDC!";
+		else
+			std::cout << "\nNu e IDC!";
 
-		//input.close();
-
-		////g.GenerateWord();
-		//std::cout << "\n~~~~~~~~~~~~~\n";
-
-		////g.SimplifyGrammar();
-		//g.RemoveInaccessibleSymbols();
-		//g.PrintGrammar();
-		///*g.RemoveSimbolNotGenerating();
+		input.close();
+		std::string word = g.GenerateWord();
 		//g.PrintGrammar();
 		//g.RemoveSimbolNotGenerating();
 		//g.PrintGrammar();*/
-
+		std::cout << "\n\nCuvantul generat este: " << word << "\n\n";
 		PushDownAutomaton pda;
 		pda.ReadAutomaton("input.in");
-		pda.DisplayAutomaton();
-		pda.ProcessWord("aaabbb");
-		if (pda.isDeterministic())
+		pda.PrintAutomaton();
+		pda.CheckWord("aaabbb");
+		if (pda.IsDeterministic())
 			std::cout << "E determinist\n";
 		else
 			std::cout << "Nu e determinist\n";
-		input.close();
-        
-		std::ifstream input2("input2.in");
-		Grammar g2;
-		g2.ReadGrammar(input2);
-		g2.IsIDC();
-		/*g2.PrintGrammar();
-		if (g2.IsRegular())
-			std::cout << "\nE regulata!";
-		else
-			std::cout << "\nNu e regulata!";*/
-		std::string word;
-		word = g2.GenerateWord();
-		//std::cin >> word;
-		pda.ProcessWord(word);
-		input2.close();
-
-		/*PushDownAutomaton automaton(
-			{ 0, 1, 2 },                
-			{ 'a', 'b' },               
-			{ {0, 'a', {1, 2} },         
-			  {1, 'b', {2} },
-			  {2, 'a', {0} } },
-			  0,                         
-			  { 1, 2}                     
-		);
-
-		if (automaton.VerifyAutomaton())
-		{
-			automaton.PrintAutomaton();
-		}
-
-		if (automaton.CheckWord("abaa")) {
-			std::cout << "Cuvantul este acceptat.\n"<<"\n";
-		}
-		else {
-			std::cout << "Cuvantul nu este acceptat.\n"<<"\n";
-		}
-
-		if (automaton.IsDeterministic())
-		{
-			std::cout << "Automatul este determinist(AFD).\n";
-		}
-		else {
-			std::cout << "Automatul este nedeterminist(AFN).\n";
-		}
-
-		std::cout << '\n';
-		std::ifstream input3("input3.in");
-		Grammar g3;
-		g3.ReadGrammar(input3);
-		PushDownAutomaton generatedAutomaton = g3.ConvertToAutomaton();
-		std::cout << "Se doreste generarea unui automat finit din gramatica urmatoare:\n";
-		g3.PrintGrammar();
-		std::cout << "Automatul rezultat este:\n";
-		generatedAutomaton.PrintAutomaton();*/
+		
+		std::cout << "\n Alege un cuvant de verificat: ";
+		std::cin >> word;
+		pda.CheckWord(word);
 	}
 	catch (std::exception e) {
 		std::cout << e.what();
